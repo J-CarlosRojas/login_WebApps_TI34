@@ -1,5 +1,5 @@
 body{
-    background-color: #636B73;
+    background-color: 	#fceee9;
     font-family: roboto;
     margin: auto;
     text-align: center;
@@ -8,6 +8,10 @@ body{
 .login-form, .container {
     width: 300px;
     margin: 0 auto;
+}
+
+.login-form h2{
+    color: #a3b899;
 }
 
 .login-form h1{
@@ -23,6 +27,8 @@ body{
     border: 1px solid #ced4da;
     margin-bottom: 10px;
     box-sizing: border-box;
+    background-color: #dde6d5;
+    border-radius: 10px 0px 0px 0px;
 }
 
 /* Login button Style*/
@@ -36,12 +42,14 @@ body{
     font-weight: bold;
     font-size: large;
     color: #ffffff;
+    border-radius: 10px 0px 0px 0px;
 }
 
 .btn-login:hover, .btn-login:active {
     color: #fff;
     background-color:#475159;
     border-color: #475159;
+    border-radius: 10px 0px 0px 0px;
 }
 
 .btn-login:focus {
@@ -65,12 +73,14 @@ body{
     -moz-appearance: button; 
     appearance: button;
     text-decoration: none;
+    border-radius: 10px 0px 0px 0px;
 }
 
 .btn-register:hover, .btn-register:active {
     color: #fff;
     background-color: #475159;
     border-color: #475159;
+    border-radius: 10px 0px 0px 0px;
 }
 
 .btn-register:focus {
@@ -139,7 +149,7 @@ body{
 .btn-save {
     width: 50%;
     padding: 15px;
-    background-color: #1d4ed8;
+    background-color: #a3b899;
     border: 0;
     box-sizing: border-box;
     cursor: pointer;
@@ -165,7 +175,7 @@ body{
 }
 /* form user registration*/
 .register-form {
-    color: #ced4da;
+    color: #667b68;
     width: 400px;
     margin: 0 auto;
     padding: 0px 20px 60px 20px;
@@ -173,10 +183,11 @@ body{
     font-family: roboto;
     text-align: left !important;
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+    background-color: #f8d3c5;
 }
 .register-form h1 {
     text-align: left;
-    color: #F2F2F2;
+    color: #667b68;
     font-size: 22px;
     padding: 70px 0 10px 0;
 }
