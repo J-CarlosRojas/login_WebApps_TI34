@@ -1,88 +1,90 @@
-//Invocar a express
+//invocamos a express
 const express = require('express');
 const app = express();
 
-//Setear urlenconded para capturar los datos de nuestro formulario
+// 3.- Seteamos urlencoded para capturar los datos de nuestro formulario
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
-// Invocar a dotenv
+//4.- Invocamos a dotenv
 const dotenv = require('dotenv');
 dotenv.config({path:'./env/.env'});
 
-//el directorio public
+//5.- el directorio public
 app.use('/', express.static('public'));
 app.use('/', express.static(__dirname + '/public'));
 
-//Establecer el motor de plantillas ejs
+//6.- Establecemos el motor de plantillas ejs
 app.set('view engine', 'ejs');
 
-//Invocar a bcryptjs
+//7.- Invocamos a bcryptjs
 const bcryptjs = require('bcryptjs');
 
-//Variables de sesion
+//8.- Variables de sesion
 const session = require('express-session');
 app.use(session({
     secret: 'secret',
     resave: true,
     saveUninitialized: true
-}))
+}));
 
-//invocar el modulo de conexion de nuestra BD
-const conection = require('./database/db')
-
-const  {name}   = require('ejs');
+//9.- Invocamos el modulo de conexion DB, colocarlo despues de configurar env y db
 const connection = require('./database/db');
+const { name } = require('ejs');
 
-//Establecer nuestras routes
+//SEGUNDA PARTE
+/*app.get ('/', (req, res)=>{
+    res.send('Hello World');
+})*/
 
-app.get ('/', (req, res)=> {
-    res.render('index');
-})
+// Establecer las routes
 
-app.get ('/login', (req, res)=> {
+/*app.get ('/', (req, res)=>{
+    res.render('index'/*, {msg: 'ESTO ES UN MENSAJE DESDE NODE'} Colocarlo en index.ejs <%= msg %>*///);
+//});
+
+app.get ('/login', (req, res)=>{
     res.render('login');
-})
+});
 
-app.get ('/register', (req, res)=> {
+app.get ('/register', (req, res)=>{
     res.render('register');
-})
+});
 
-//register
+// 11.- Register
 
-app.post('/register', async(req, res) => {
+app.post('/register', async(req, res)=>{
     const user = req.body.user;
     const name = req.body.name;
     const rol = req.body.rol;
     const pass = req.body.pass;
-    let passwordhash = await bcryptjs.hash(pass, 8)
-    connection.query('INSERT INTO login set ?' , {
-        user:user, name:name, rol:rol, pass:passwordhash
-    }, async(error, results) => {
+    let passwordHash = await bcryptjs.hash(pass,8);
+    connection.query ('INSERT INTO login SET ?' , {user:user, name:name, rol:rol, pass:passwordHash}, async(error, results)=>{
         if(error){
             console.log(error);
         }else{
-            //res.send('succesful registrration')
+            //res.send('Successful Registration')
             res.render('register', {
                 alert: true,
-                alertTitle: 'Registration',
-                alertMessage: 'Succesful',
+                alertTitle: "Registration",
+                alertMessage: "¡Successful Registration!",
                 alertIcon: 'success',
                 showConfirmButton: false,
-                timer: 1500,
+                timer: '1500',
                 ruta: ''
             })
         }
     })
-})
+})  
 
+//12 Auth
 
 app.post('/auth', async (req, res) =>{
     const user = req.body.user;
     const pass = req.body.pass;
     let passwordHash = await bcryptjs.hash(pass,8);
     if(user && pass){
-        connection.query('SELECT * FROM users WHERE user = ?', [user], async (error, results)=> {
+        connection.query('SELECT * FROM login WHERE user = ?', [user], async (error, results)=> {
             if(results.length == 0 || !(await bcryptjs.compare(pass, results[0].pass))){
                 //res.send('Usuario y/o contraseña incorrecta');
                 res.render('login', {
@@ -148,12 +150,7 @@ app.get('/logout', (req, res)=>{
     })
 })
 
-
-/*app.get('/', (req, res)=>{
-    res.send('Hello');
-})*/
-
+//PRIMERA PARTE
 app.listen(3000, (req, res) =>{
-    console.log('Server running on https://localhost:3000/')
+    console.log('Server running on https://localhost:3000/');
 })
-
