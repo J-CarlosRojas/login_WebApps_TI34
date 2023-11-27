@@ -76,6 +76,79 @@ app.post('/register', async(req, res) => {
     })
 })
 
+
+app.post('/auth', async (req, res) =>{
+    const user = req.body.user;
+    const pass = req.body.pass;
+    let passwordHash = await bcryptjs.hash(pass,8);
+    if(user && pass){
+        connection.query('SELECT * FROM users WHERE user = ?', [user], async (error, results)=> {
+            if(results.length == 0 || !(await bcryptjs.compare(pass, results[0].pass))){
+                //res.send('Usuario y/o contraseña incorrecta');
+                res.render('login', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "User or password incorrect!",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: 'login'
+                });
+            
+            }else{
+                //res.send('Login correcto');
+                req.session.loggedin = true;
+                req.session.name = results[0].name
+                res.render('login', {
+                    alert: true,
+                    alertTitle: "Successful conection",
+                    alertMessage: "Login correcto!",
+                    alertIcon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: ''
+                });
+            }
+        })
+    }else{
+        //res.send('Por favor ingrese un usuario y/o password');
+        res.render('login', {
+            alert: true,
+            alertTitle: "Advertencia",
+            alertMessage: "Por favor ingrese un usuario y/o password",
+            alertIcon: 'warning',
+            showConfirmButton: true,
+            timer: 1500,
+            ruta: 'login'
+        });
+    }
+
+})
+
+//13 Auth Pages
+app.get('/', (req, res) =>{
+    if(req.session.loggedin){
+        res.render('index', {
+            login: true,
+            name: req.session.name
+        });
+    }else{
+        res.render('index', {
+            login: false,
+            name: 'Debe iniciar sesión'
+        })
+    }
+})
+
+//14.- Logout
+
+app.get('/logout', (req, res)=>{
+    req.session.destroy(()=>{
+        res.redirect('/');
+    })
+})
+
+
 /*app.get('/', (req, res)=>{
     res.send('Hello');
 })*/
